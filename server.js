@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors');  // To handle CORS if needed
+const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -20,8 +20,8 @@ app.post('/register', (req, res) => {
         return res.status(400).json({ error: 'All fields are required!' });
     }
 
-    // Registration logic (e.g., save data to a database)
-    // For the sake of this example, we will just return a success message
+    // Simulate a registration process (e.g., save data to a database)
+    // For this example, we'll just return a success message
     res.status(200).json({ message: 'Registration successful!' });
 });
 
