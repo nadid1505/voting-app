@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote Page</title>
+    <link rel="stylesheet" href="styles.css">  <!-- External CSS file for styling -->
+</head>
+<body>
+
+    <div class="background">
+        <div class="opacity-layer"></div>
+        <div class="vote-container">
+            <h2>Vote for an ID</h2>
+            <form id="voteForm">
+                <input type="text" id="voteId" placeholder="Enter the ID you want to vote for" required>
+                <button type="button" onclick="submitVote()">Vote</button>
+            </form>
+            <div id="voteMessage"></div>
+        </div>
+    </div>
+
+    <script>
+        // Function to submit vote
+        function submitVote() {
+            var voteId = document.getElementById('voteId').value;
+            var message = document.getElementById('voteMessage');
+
+            if (!voteId) {
+                message.textContent = 'Please enter a valid ID to vote!';
+                return;
+            }
+
+            // Send data to the Express backend (for voting)
+            fetch('http://localhost:5000/vote', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ voteId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    message.textContent = data.message;  // Voting success message
+                } else {
+                    message.textContent = data.error;  // Voting error message
+                }
+            })
+            .catch(error => {
+                message.textContent = 'Error: ' + error;
+            });
+        }
+    </script>
+
+</body>
+</html>

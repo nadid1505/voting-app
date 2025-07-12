@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <link rel="stylesheet" href="styles.css">  <!-- External CSS file for styling -->
+</head>
+<body>
+
+    <div class="background">
+        <div class="opacity-layer"></div>
+        <div class="register-container">
+            <h2>Register</h2>
+            <form id="registerForm">
+                <input type="text" id="username" placeholder="Enter Username" required>
+                <input type="password" id="password" placeholder="Enter Password" required>
+                <input type="date" id="dob" required>
+                <button type="button" onclick="validateRegister()">Register</button>
+            </form>
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Function to validate registration
+        function validateRegister() {
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var dob = document.getElementById('dob').value;
+            var message = document.getElementById('message');
+
+            // Check if any field is empty
+            if (!username || !password || !dob) {
+                message.textContent = 'All fields are required!';
+                return;
+            }
+
+            // Send registration data to the backend (Express server)
+            fetch('http://localhost:5000/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password, dob }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    message.textContent = data.message;  // Show success message
+                    
+                    // Redirect to the voting page after successful registration
+                    setTimeout(function() {
+                        window.location.href = 'vote.html';  // Redirect to the vote page
+                    }, 2000);  // Delay for 2 seconds to show the success message
+                } else {
+                    message.textContent = data.error;  // Show error message
+                }
+            })
+            .catch(error => {
+                message.textContent = 'Error: ' + error;
+            });
+        }
+    </script>
+
+</body>
+</html>
